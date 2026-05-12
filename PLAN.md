@@ -20,19 +20,61 @@ through independent, self-contained routes:
 
 ## Architecture
 
+The app still uses separate learning routes, but the internal implementation should follow
+the shared viewer architecture below so later integration does not require a rewrite.
+
+### Shared Viewer Structure
+
+```text
+Next.js App
+|
++-- Top-left Toggle Panel
+|   +-- IFC Viewer
+|   +-- OSM / Map Viewer
+|   +-- Google Map-like Viewer
+|   +-- Point Cloud Viewer
+|   +-- Mesh / GLB Viewer
+|
++-- Three.js Canvas
+|   +-- Load IFC / Fragment / GLB / Mesh
+|   +-- Load Point Cloud
+|   +-- Add Markers
+|
++-- Map Component
+|   +-- OSM tiles / vector map
+|   +-- Overpass queried features
+|   +-- Georeferenced location
+|
++-- Coordinate Utils
+    +-- WGS84 to SVY21
+    +-- SVY21 to local Three.js coordinates
+    +-- Elevation / z-axis handling
+```
+
+### Route Structure
+
 ```
 pointcloud-demo/
 ├── src/
-│   └── app/
-│       ├── page.tsx               # / — Home with 4 cards
-│       ├── osm-overpass/
-│       │   └── page.tsx           # /osm-overpass
-│       ├── leaflet-map/
-│       │   └── page.tsx           # /leaflet-map
-│       ├── three-viewer/
-│       │   └── page.tsx           # /three-viewer
-│       └── point-cloud/
-│           └── page.tsx           # /point-cloud
+│   ├── app/
+│   │   ├── page.tsx               # / — Home with 4 cards
+│   │   ├── osm-overpass/
+│   │   │   └── page.tsx           # /osm-overpass
+│   │   ├── leaflet-map/
+│   │   │   └── page.tsx           # /leaflet-map
+│   │   ├── three-viewer/
+│   │   │   └── page.tsx           # /three-viewer
+│   │   └── point-cloud/
+│   │       └── page.tsx           # /point-cloud
+│   ├── components/
+│   │   ├── viewer/
+│   │   │   ├── TopLeftTogglePanel.tsx
+│   │   │   ├── ViewerArchitectureDemo.tsx
+│   │   │   └── types.ts
+│   │   └── map/
+│   │       └── MapComponentPlaceholder.tsx
+│   └── lib/
+│       └── coordinates.ts         # WGS84 / SVY21 / local scene helpers
 ├── public/
 │   └── data/
 │       └── sample-10k-points.json # Static point cloud sample
@@ -47,7 +89,7 @@ pointcloud-demo/
 
 | Layer       | Choice                    | Notes                                           |
 |-------------|---------------------------|--------------------------------------------------|
-| Framework   | Next.js 15+ (App Router)  | Same pattern as `simon_three_test`              |
+| Framework   | Next.js 16 (App Router)   | Same pattern as `simon_three_test`              |
 | Language    | TypeScript                | Strict mode                                      |
 | Styling     | Tailwind CSS v4           | Utility-first                                    |
 | Mapping     | Leaflet (v1 primary)      | Keep architecture open to MapLibre later         |
@@ -59,10 +101,11 @@ pointcloud-demo/
 ## Phases
 
 ### Phase 1 — Project Scaffold
-- [ ] Initialize Next.js app with TypeScript and Tailwind CSS
-- [ ] Create the 5 routes (`/`, `/osm-overpass`, `/leaflet-map`, `/three-viewer`, `/point-cloud`)
-- [ ] Build the home page with 4 navigation cards
-- [ ] Add placeholder content to each route page
+- [x] Initialize Next.js app with TypeScript and Tailwind CSS
+- [x] Create the 5 routes (`/`, `/osm-overpass`, `/leaflet-map`, `/three-viewer`, `/point-cloud`)
+- [x] Build the home page with 4 navigation cards
+- [x] Add placeholder content to each route page
+- [x] Add initial shared viewer architecture placeholders from the diagram
 - [ ] Push initial scaffold to `main`
 
 ### Phase 2 — OSM + Overpass Basics
@@ -81,8 +124,8 @@ pointcloud-demo/
 
 ### Phase 4 — Three.js Viewer Architecture
 - [ ] Install `three` + `@react-three/fiber` + `@react-three/drei`
-- [ ] Build a scene container with clean mode switching (e.g. wireframe / solid / point)
-- [ ] Demonstrate component swap pattern for different viewer modes
+- [ ] Build a scene container with clean mode switching via the top-left toggle panel
+- [ ] Demonstrate component swap pattern for IFC / map / point cloud / mesh viewer modes
 - [ ] Add basic OrbitControls and lighting
 - [ ] Verify: scene modes switch cleanly without leaks or stale state
 
@@ -131,3 +174,4 @@ pointcloud-demo/
 - Leaflet is the primary mapping library. Architecture should allow MapLibre as a drop-in later, but MapLibre is **not** the first implementation.
 - Each route should be self-contained and independently viewable.
 - The point cloud data file should be small enough to commit directly (target < 500 KB).
+- Coordinate handling is a first-class concern from the start, even if Phase 1 only provides placeholders and interfaces.

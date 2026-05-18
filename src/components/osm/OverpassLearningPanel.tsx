@@ -195,26 +195,32 @@ export function OverpassLearningPanel() {
               <SummaryCard label="Relations" value={summary.typeCounts.relation.toString()} />
             </div>
 
-            <div className="overflow-hidden rounded-2xl border border-stone-800 bg-stone-950/80">
-              <div className="grid grid-cols-[90px_90px_minmax(0,1fr)_minmax(0,1fr)_170px] gap-3 border-b border-stone-800 px-4 py-3 text-xs uppercase tracking-[0.2em] text-stone-500">
-                <span>ID</span>
-                <span>Type</span>
-                <span>Name</span>
-                <span>Main Tag</span>
-                <span>Coordinate</span>
-              </div>
-              {summary.sampleRows.map((row) => (
-                <div
-                  key={`${row.type}-${row.id}`}
-                  className="grid grid-cols-[90px_90px_minmax(0,1fr)_minmax(0,1fr)_170px] gap-3 border-b border-stone-900 px-4 py-3 text-sm text-stone-200 last:border-b-0"
-                >
-                  <span className="text-stone-400">{row.id}</span>
-                  <span>{row.type}</span>
-                  <span className="truncate">{row.name}</span>
-                  <span className="truncate text-stone-300">{row.primaryTag}</span>
-                  <span className="text-stone-400">{row.coordinate}</span>
+            <div className="rounded-2xl border border-stone-800 bg-stone-950/80 overflow-hidden">
+              <div className="overflow-x-auto">
+                <div className="grid grid-cols-[80px_70px_1fr_1fr_150px] gap-4 border-b border-stone-800 px-4 py-3 text-xs uppercase tracking-[0.2em] text-stone-500">
+                  <span>ID</span>
+                  <span>Type</span>
+                  <span>Name</span>
+                  <span>Main Tag</span>
+                  <span>Coordinate</span>
                 </div>
-              ))}
+              </div>
+              <div className="max-h-80 overflow-y-auto">
+                <div className="overflow-x-auto">
+                  {summary.sampleRows.map((row, index) => (
+                    <div
+                      key={`${row.type}-${row.id}`}
+                      className="grid grid-cols-[80px_70px_1fr_1fr_150px] gap-4 border-b border-stone-900 px-4 py-3 text-sm text-stone-200 last:border-b-0 hover:bg-stone-900/30"
+                    >
+                      <span className="text-stone-400 font-mono">{row.id}</span>
+                      <span className="text-stone-300">{row.type}</span>
+                      <span className="break-words text-stone-100">{row.name}</span>
+                      <span className="break-words text-stone-300 font-mono text-xs">{row.primaryTag}</span>
+                      <span className="text-stone-400 font-mono text-xs">{row.coordinate}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         ) : null}

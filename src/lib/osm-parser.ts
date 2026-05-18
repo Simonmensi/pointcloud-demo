@@ -6,6 +6,7 @@ import { type OSMElement } from "./osm-overpass";
  */
 export function parseOsmXml(xmlText: string): OSMElement[] {
   const elements: OSMElement[] = [];
+  const nodeCoordinates = new Map<number, { lat: number; lon: number }>();
 
   // Simple XML parser - split by opening tags
   const nodeMatches = xmlText.matchAll(/<node[^>]*?id="(\d+)"[^>]*?lat="([^"]*)"[^>]*?lon="([^"]*)"[^>]*?(\/?>)/g);
@@ -14,12 +15,15 @@ export function parseOsmXml(xmlText: string): OSMElement[] {
     /<relation[^>]*?id="(\d+)"[^>]*?(\/?>)/g
   );
 
-  // Parse nodes
+  // First pass: Parse nodes and store coordinates for later use
   for (const match of nodeMatches) {
     const id = parseInt(match[1], 10);
     const lat = parseFloat(match[2]);
     const lon = parseFloat(match[3]);
     const isSelfClosing = match[4] === "/>";
+
+    // Store node coordinates for ways/relations to reference
+    nodeCoordinates.set(id, { lat, lon });
 
     // Extract tags if not self-closing
     let tags: Record<string, string> | undefined;
@@ -51,6 +55,11 @@ export function parseOsmXml(xmlText: string): OSMElement[] {
       const wayXml = xmlText.substring(xmlText.indexOf(`id="${id}"`), wayEnd);
       tags = extractTags(wayXml);
       center = extractCenter(wayXml);
+      
+      // If center not found, calculate from node refs
+      if (!center) {
+        center = calculateCenterFromNodeRefs(wayXml, nodeCoordinates);
+      }
     }
 
     elements.push({
@@ -80,6 +89,11 @@ export function parseOsmXml(xmlText: string): OSMElement[] {
       );
       tags = extractTags(relationXml);
       center = extractCenter(relationXml);
+      
+      // If center not found, calculate from member refs
+      if (!center) {
+        center = calculateCenterFromMemberRefs(relationXml, nodeCoordinates);
+      }
     }
 
     elements.push({
@@ -127,4 +141,56 @@ function decodeHtmlEntities(text: string): string {
     "&apos;": "'",
   };
   return text.replace(/&[a-zA-Z]+;/g, (entity) => entityMap[entity] || entity);
+}
+
+function calculateCenterFromNodeRefs(
+  xml: string,
+  nodeCoordinates: Map<number, { lat: number; lon: number }>
+): { lat: number; lon: number } | undefined {
+  const ndMatches = xml.matchAll(/<nd[^>]*?ref="(\d+)"/g);
+  const coords: { lat: number; lon: number }[] = [];
+
+  for (const match of ndMatches) {
+    const nodeId = parseInt(match[1], 10);
+    const coord = nodeCoordinates.get(nodeId);
+    if (coord) {
+      coords.push(coord);
+    }
+  }
+
+  if (coords.length === 0) {
+    return undefined;
+  }
+
+  // Calculate average lat/lon
+  const avgLat = coords.reduce((sum, c) => sum + c.lat, 0) / coords.length;
+  const avgLon = coords.reduce((sum, c) => sum + c.lon, 0) / coords.length;
+
+  return { lat: avgLat, lon: avgLon };
+}
+
+function calculateCenterFromMemberRefs(
+  xml: string,
+  nodeCoordinates: Map<number, { lat: number; lon: number }>
+): { lat: number; lon: number } | undefined {
+  const memberMatches = xml.matchAll(/<member[^>]*?type="node"[^>]*?ref="(\d+)"/g);
+  const coords: { lat: number; lon: number }[] = [];
+
+  for (const match of memberMatches) {
+    const nodeId = parseInt(match[1], 10);
+    const coord = nodeCoordinates.get(nodeId);
+    if (coord) {
+      coords.push(coord);
+    }
+  }
+
+  if (coords.length === 0) {
+    return undefined;
+  }
+
+  // Calculate average lat/lon
+  const avgLat = coords.reduce((sum, c) => sum + c.lat, 0) / coords.length;
+  const avgLon = coords.reduce((sum, c) => sum + c.lon, 0) / coords.length;
+
+  return { lat: avgLat, lon: avgLon };
 }

@@ -176,7 +176,7 @@ export function summarizeOverpass(elements: OSMElement[]) {
     { node: 0, way: 0, relation: 0 },
   );
 
-  const sampleRows: OverpassSummaryRow[] = elements.slice(0, 8).map((element) => ({
+  const sampleRows: OverpassSummaryRow[] = elements.slice(0, 50).map((element) => ({
     id: element.id,
     type: element.type,
     name: element.tags?.name ?? "Unnamed feature",

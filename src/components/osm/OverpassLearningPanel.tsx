@@ -207,7 +207,7 @@ export function OverpassLearningPanel() {
               </div>
               <div className="max-h-80 overflow-y-auto">
                 <div className="overflow-x-auto">
-                  {summary.sampleRows.map((row, index) => (
+                  {summary.sampleRows.map((row) => (
                     <div
                       key={`${row.type}-${row.id}`}
                       className="grid grid-cols-[80px_70px_1fr_1fr_150px] gap-4 border-b border-stone-900 px-4 py-3 text-sm text-stone-200 last:border-b-0 hover:bg-stone-900/30"

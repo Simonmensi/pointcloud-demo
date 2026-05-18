@@ -1,4 +1,5 @@
-import { PlaceholderPanel } from "@/components/AppShell/PlaceholderPanel";
+import { OSMPrimer } from "@/components/osm/OSMPrimer";
+import { OverpassLearningPanel } from "@/components/osm/OverpassLearningPanel";
 import { RouteHeader } from "@/components/AppShell/RouteHeader";
 
 export default function OsmOverpassPage() {
@@ -8,17 +9,11 @@ export default function OsmOverpassPage() {
         <RouteHeader
           eyebrow="Part 01"
           title="OSM + Overpass"
-          description="This route will explain OSM nodes, ways, relations, and tags, then show simple Overpass queries for buildings, roads, and POIs in one region."
+          description="Learn the OSM object model first, then run 3 real Overpass examples against one Singapore study region so the returned data is understandable before it reaches Leaflet or Three.js."
         />
 
-        <PlaceholderPanel
-          title="Phase 2 Targets"
-          bullets={[
-            "Document the OSM object model: nodes, ways, relations, and tags.",
-            "Add 2 to 3 runnable Overpass examples for one chosen region.",
-            "Show readable results so the data structure is easier to understand.",
-          ]}
-        />
+        <OSMPrimer />
+        <OverpassLearningPanel />
       </div>
     </main>
   );

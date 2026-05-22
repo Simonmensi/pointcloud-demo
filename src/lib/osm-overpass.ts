@@ -12,6 +12,7 @@ export type OSMElement = {
   lat?: number;
   lon?: number;
   center?: OSMCoordinate;
+  geometry?: OSMCoordinate[];
 };
 
 export type OverpassResponse = {

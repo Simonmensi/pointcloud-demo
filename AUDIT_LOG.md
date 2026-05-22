@@ -27,11 +27,11 @@ Each update should capture:
 ## Current Status
 
 - Repository: `pointcloud-demo`
-- Active branch: `feature/phase-3-leaflet-map`
+- Active branch: `feature/phase-4-three-viewer`
 - Phase 1: ✅ completed
 - Phase 2: ✅ completed
-- Phase 3: ✅ completed
-- PR #2: Open (awaiting review/merge to main)
+- Phase 3: ✅ completed and merged to main
+- Phase 4: prepared (not started)
 
 ## Recent Decisions
 
@@ -130,6 +130,9 @@ All Phase 3 checklist items completed:
 
 ## Next Steps
 
-1. **Immediate:** Review and merge PR #2 to main (if approved)
-2. **Phase 4 Planning:** Three.js viewer architecture setup on feature/phase-4-three-viewer (branch already prepared with Phase 1-3 code)
-3. **Future:** Point cloud and mesh viewer implementations
+1. ✅ Phase 3 complete, merged to main (PR #2 and #3)
+2. ✅ Layout fix applied and verified
+3. ✅ Phase 4 branch prepared (`feature/phase-4-three-viewer` synced with main)
+4. ⏳ **Awaiting instruction to begin Phase 4 implementation**
+5. Phase 4 tasks: Install Three.js dependencies → implement mode-switching architecture → verify memory leaks
+6. Phase 4 deliverable: Clean scene mode-switching (IFC/Map/PointCloud/Mesh) with OrbitControls

@@ -28,9 +28,10 @@ Each update should capture:
 
 - Repository: `pointcloud-demo`
 - Active branch: `feature/phase-3-leaflet-map`
-- Phase 1: completed
-- Phase 2: completed
-- Phase 3: in progress
+- Phase 1: ✅ completed
+- Phase 2: ✅ completed
+- Phase 3: ✅ completed
+- PR #2: Open (awaiting review/merge to main)
 
 ## Recent Decisions
 
@@ -101,9 +102,34 @@ Key points already established:
 - Route generation is possible, but requires a routing service such as OSRM or OpenRouteService.
 - Open source options exist across map rendering, IFC handling, and routing, but some tile or hosted services may still have pricing constraints.
 
-## Next Suggested Steps
+## Phase 3 Completion Summary
 
-1. Review the `/leaflet-map` UI in the browser.
-2. Decide whether Phase 3 needs any UX refinement before commit.
-3. Commit the current Phase 3 changes on `feature/phase-3-leaflet-map`.
-4. If needed, prepare a short boss-facing summary of open-source and pricing options.
+**Status:** ✅ Complete and verified in browser
+
+All Phase 3 checklist items completed:
+- [x] Install `leaflet` + `react-leaflet` (dynamic import for SSR compatibility)
+- [x] Render an OSM tile layer as the base map
+- [x] Add a top-left toggle dropdown to switch overlay layers
+- [x] Show building / road / POI overlays from Overpass results
+- [x] Verify: interactive map with working layer toggles
+
+**Browser Verification Results:**
+- Map loads with OSM base tiles
+- Overlay dropdown switches between All/Buildings/Roads/POIs modes
+- 108 buildings render as amber polygons with correct geometry
+- 345 roads render as blue polylines with correct geometry
+- 258 POIs render as green dots with correct coordinates
+- Interactive popups show feature names, primary tags, and lat/lon
+- Zoom/pan controls respond smoothly
+- No console errors or SSR issues
+
+**GitHub PR:**
+- PR #2 created on feature/phase-3-leaflet-map → main
+- All CI checks pass: lint, build, type checking
+- Ready for review and merge
+
+## Next Steps
+
+1. **Immediate:** Review and merge PR #2 to main (if approved)
+2. **Phase 4 Planning:** Three.js viewer architecture setup on feature/phase-4-three-viewer (branch already prepared with Phase 1-3 code)
+3. **Future:** Point cloud and mesh viewer implementations

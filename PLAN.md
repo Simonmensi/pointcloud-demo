@@ -106,14 +106,14 @@ pointcloud-demo/
 - [x] Build the home page with 4 navigation cards
 - [x] Add placeholder content to each route page
 - [x] Add initial shared viewer architecture placeholders from the diagram
-- [ ] Push initial scaffold to `main`
+- [x] Push initial scaffold to `main`
 
 ### Phase 2 — OSM + Overpass Basics
-- [ ] Add an OSM data primer page explaining core objects (nodes, ways, relations, tags)
-- [ ] Integrate Overpass API querying for a sample region (buildings, roads, POIs)
-- [ ] Display query results in a readable table / summary
-- [ ] Add 2–3 runnable Overpass examples with copy-paste queries
-- [ ] Verify: user can understand OSM structure and run basic Overpass queries
+- [x] Add an OSM data primer page explaining core objects (nodes, ways, relations, tags)
+- [x] Integrate OSM Direct Export API querying for a sample region (buildings, roads, POIs)
+- [x] Display query results in a readable table / summary
+- [x] Add 3 runnable OSM examples with live query details for buildings, roads, and POIs
+- [x] Verify: user can understand OSM structure and run basic OSM queries
 
 ### Phase 3 — Leaflet Map
 - [ ] Install `leaflet` + `react-leaflet` (dynamic import for SSR compatibility)
@@ -175,3 +175,4 @@ pointcloud-demo/
 - Each route should be self-contained and independently viewable.
 - The point cloud data file should be small enough to commit directly (target < 500 KB).
 - Coordinate handling is a first-class concern from the start, even if Phase 1 only provides placeholders and interfaces.
+- Phase 2 currently uses the OSM Direct Export API for live Singapore data because Overpass results were stale for the chosen study area.

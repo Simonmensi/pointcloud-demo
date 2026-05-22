@@ -49,16 +49,18 @@ export function parseOsmXml(xmlText: string): OSMElement[] {
 
     let tags: Record<string, string> | undefined;
     let center: { lat: number; lon: number } | undefined;
+    let geometry: { lat: number; lon: number }[] | undefined;
 
     if (!isSelfClosing) {
       const wayEnd = xmlText.indexOf("</way>", xmlText.indexOf(`id="${id}"`));
       const wayXml = xmlText.substring(xmlText.indexOf(`id="${id}"`), wayEnd);
       tags = extractTags(wayXml);
+      geometry = extractWayGeometry(wayXml, nodeCoordinates);
       center = extractCenter(wayXml);
-      
+
       // If center not found, calculate from node refs
       if (!center) {
-        center = calculateCenterFromNodeRefs(wayXml, nodeCoordinates);
+        center = calculateCenterFromCoordinates(geometry);
       }
     }
 
@@ -67,6 +69,7 @@ export function parseOsmXml(xmlText: string): OSMElement[] {
       type: "way",
       ...(tags && { tags }),
       ...(center && { center }),
+      ...(geometry && geometry.length > 0 && { geometry }),
     });
   }
 
@@ -143,26 +146,32 @@ function decodeHtmlEntities(text: string): string {
   return text.replace(/&[a-zA-Z]+;/g, (entity) => entityMap[entity] || entity);
 }
 
-function calculateCenterFromNodeRefs(
+function extractWayGeometry(
   xml: string,
   nodeCoordinates: Map<number, { lat: number; lon: number }>
-): { lat: number; lon: number } | undefined {
-  const ndMatches = xml.matchAll(/<nd[^>]*?ref="(\d+)"/g);
+): { lat: number; lon: number }[] {
   const coords: { lat: number; lon: number }[] = [];
+  const ndMatches = xml.matchAll(/<nd[^>]*?ref="(\d+)"/g);
 
   for (const match of ndMatches) {
     const nodeId = parseInt(match[1], 10);
     const coord = nodeCoordinates.get(nodeId);
+
     if (coord) {
       coords.push(coord);
     }
   }
 
-  if (coords.length === 0) {
+  return coords;
+}
+
+function calculateCenterFromCoordinates(
+  coords: { lat: number; lon: number }[] | undefined
+): { lat: number; lon: number } | undefined {
+  if (!coords || coords.length === 0) {
     return undefined;
   }
 
-  // Calculate average lat/lon
   const avgLat = coords.reduce((sum, c) => sum + c.lat, 0) / coords.length;
   const avgLon = coords.reduce((sum, c) => sum + c.lon, 0) / coords.length;
 

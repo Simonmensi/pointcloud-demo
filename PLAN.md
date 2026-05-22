@@ -116,11 +116,11 @@ pointcloud-demo/
 - [x] Verify: user can understand OSM structure and run basic OSM queries
 
 ### Phase 3 — Leaflet Map
-- [ ] Install `leaflet` + `react-leaflet` (dynamic import for SSR compatibility)
-- [ ] Render an OSM tile layer as the base map
-- [ ] Add a top-left toggle dropdown to switch overlay layers
-- [ ] Show building / road / POI overlays from Overpass results (or GeoJSON samples)
-- [ ] Verify: interactive map with working layer toggles
+- [x] Install `leaflet` + `react-leaflet` (dynamic import for SSR compatibility)
+- [x] Render an OSM tile layer as the base map
+- [x] Add a top-left toggle dropdown to switch overlay layers
+- [x] Show building / road / POI overlays from Overpass results (or GeoJSON samples)
+- [x] Verify: interactive map with working layer toggles
 
 ### Phase 4 — Three.js Viewer Architecture
 - [ ] Install `three` + `@react-three/fiber` + `@react-three/drei`
